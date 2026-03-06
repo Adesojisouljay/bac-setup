@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { ExternalLink, Copy, Check, Server, Globe } from 'lucide-react';
+import { ExternalLink, Copy, Check, Globe } from 'lucide-react';
 import { configService } from '../services/configService';
 import { Navbar } from '../components/Navbar';
 
