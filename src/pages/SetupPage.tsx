@@ -249,13 +249,13 @@ export default function SetupPage() {
                                             </p>
                                             <div className="ml-7 group relative flex items-center justify-between bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl px-4 py-3 transition-all cursor-pointer overflow-hidden"
                                                 onClick={() => {
-                                                    navigator.clipboard.writeText('nodes.breakaway.community');
+                                                    navigator.clipboard.writeText('nodes.sovraniche.com');
                                                     toast.success('CNAME value copied!');
                                                 }}
                                             >
                                                 <div className="flex flex-col">
                                                     <span className="text-[8px] font-bold text-white/30 uppercase tracking-wider">Target / Value</span>
-                                                    <span className="text-sm font-mono font-bold text-white tracking-wider">nodes.breakaway.community</span>
+                                                    <span className="text-sm font-mono font-bold text-white tracking-wider">nodes.sovraniche.com</span>
                                                 </div>
                                                 <Copy size={14} className="text-white/20 group-hover:text-[#ff4400] transition-colors" />
                                             </div>
