@@ -306,8 +306,8 @@ export default function LandingPage() {
                             </span>
                         </div>
                         <div className="flex gap-6">
-                            <a href="https://github.com/breakaway-communities" target="_blank" rel="noreferrer" className="text-[var(--text-secondary)] hover:text-white transition-colors">Github</a>
-                            <a href="https://breakaway.community" className="text-[var(--text-secondary)] hover:text-white transition-colors">Main Site</a>
+                            <a href="https://github.com/adesojisouljay" target="_blank" rel="noreferrer" className="text-[var(--text-secondary)] hover:text-white transition-colors">Github</a>
+                            <a href="https://sovraniche.com" className="text-[var(--text-secondary)] hover:text-white transition-colors">Main Site</a>
                         </div>
                     </div>
                 </div>
