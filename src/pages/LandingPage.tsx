@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DownloadCloud, Settings, Zap, ChevronDown, History, Globe, Shield, Database, Code, Users, CheckCircle2 } from 'lucide-react';
+import { DownloadCloud, Settings, Zap, ChevronDown, Globe, Shield, Database, Code, Users, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 
@@ -13,7 +13,8 @@ interface Release {
 export default function LandingPage() {
     const [releases, setReleases] = useState<Release[]>([]);
     const [loadingReleases, setLoadingReleases] = useState(true);
-    const [showVersionHistory, setShowVersionHistory] = useState(false);
+    const [selectedVersion, setSelectedVersion] = useState<string>("");
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     useEffect(() => {
         async function fetchReleases() {
@@ -22,6 +23,9 @@ export default function LandingPage() {
                 if (res.ok) {
                     const data = await res.json();
                     setReleases(data);
+                    if (data.length > 0) {
+                        setSelectedVersion(data[0].version);
+                    }
                 }
             } catch (err) {
                 console.error("Failed to load releases", err);
@@ -33,9 +37,9 @@ export default function LandingPage() {
     }, []);
 
     // Always fall back to dist.zip if no releases are found (for backwards compatibility / dev mode)
-    const latestRelease = releases.length > 0 ? releases[0] : null;
-    const downloadUrl = latestRelease ? `/${latestRelease.filename}` : "/dist.zip";
-    const downloadName = latestRelease ? `breakaway-engine-v${latestRelease.version}.zip` : "breakaway-engine.zip";
+    const activeRelease = releases.find(r => r.version === selectedVersion) || (releases.length > 0 ? releases[0] : null);
+    const downloadUrl = activeRelease ? `/${activeRelease.filename}` : "/dist.zip";
+    const downloadName = activeRelease ? `breakaway-engine-v${activeRelease.version}.zip` : "breakaway-engine.zip";
 
     return (
         <div className="min-h-screen bg-[var(--bg-canvas)] text-[var(--text-primary)] font-sans">
@@ -66,57 +70,75 @@ export default function LandingPage() {
                                 <Settings className="w-5 h-5" />
                                 Configure Your Community
                             </Link>
-                            <a
-                                href={downloadUrl}
-                                download={downloadName}
-                                className="w-full sm:w-auto px-8 py-4 bg-[var(--bg-card)] border border-[var(--border-color)] hover:bg-[var(--bg-hover)] text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95"
-                            >
-                                {loadingReleases ? (
-                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                ) : (
-                                    <DownloadCloud className="w-5 h-5" />
-                                )}
-                                {latestRelease ? `Download Source v${latestRelease.version}` : 'Download Source ZIP'}
-                            </a>
-                        </div>
 
-                        {releases.length > 1 && (
-                            <div className="relative mt-2">
-                                <button
-                                    onClick={() => setShowVersionHistory(!showVersionHistory)}
-                                    className="text-xs font-bold text-[var(--text-secondary)] hover:text-[#ff4400] transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-[#ff4400]/5"
+                            <div className="flex w-full sm:w-auto items-stretch">
+                                <a
+                                    href={downloadUrl}
+                                    download={downloadName}
+                                    className={`w-full sm:w-auto px-8 py-4 bg-[var(--bg-card)] border border-[var(--border-color)] hover:bg-[var(--bg-hover)] text-white font-bold ${releases.length > 1 ? 'rounded-l-xl border-r-0' : 'rounded-xl'} flex items-center justify-center gap-2 transition-all active:scale-95`}
                                 >
-                                    <History size={14} />
-                                    Previous Versions
-                                    <ChevronDown size={14} className={`transition-transform duration-300 ${showVersionHistory ? 'rotate-180' : ''}`} />
-                                </button>
+                                    {loadingReleases ? (
+                                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                    ) : (
+                                        <DownloadCloud className="w-5 h-5" />
+                                    )}
+                                    {activeRelease ? `Download Source v${activeRelease.version}` : 'Download Source ZIP'}
+                                </a>
 
-                                {showVersionHistory && (
-                                    <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 w-80 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl shadow-2xl p-2 z-50 max-h-80 overflow-y-auto hidden-scrollbar animate-in slide-in-from-top-4 fade-in">
-                                        {releases.slice(1).map((release) => (
-                                            <div key={release.version} className="p-3 hover:bg-[var(--bg-hover)] rounded-xl transition-colors text-left group">
-                                                <div className="flex items-center justify-between mb-1">
-                                                    <span className="font-bold text-[var(--text-primary)]">v{release.version}</span>
-                                                    <a
-                                                        href={`/${release.filename}`}
-                                                        download={`breakaway-engine-v${release.version}.zip`}
-                                                        className="opacity-0 group-hover:opacity-100 px-3 py-1 bg-[#ff4400]/10 text-[#ff4400] text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-[#ff4400] hover:text-white transition-all shadow-sm"
-                                                    >
-                                                        Download
-                                                    </a>
+                                {releases.length > 1 && (
+                                    <div className="relative flex">
+                                        <button
+                                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                            className={`appearance-none bg-[var(--bg-card)] border border-[var(--border-color)] hover:bg-[var(--bg-hover)] text-white font-bold rounded-r-xl px-4 py-4 pr-10 outline-none cursor-pointer transition-all flex items-center h-full relative z-10`}
+                                        >
+                                            v{selectedVersion}
+                                            <ChevronDown size={16} className={`absolute right-3 top-1/2 -translate-y-1/2 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180 text-[#ff4400]' : 'text-white/70'}`} />
+                                        </button>
+                                        
+                                        {/* Dropdown Overlay */}
+                                        {isDropdownOpen && (
+                                            <>
+                                                <div 
+                                                    className="fixed inset-0 z-40"
+                                                    onClick={() => setIsDropdownOpen(false)}
+                                                />
+                                                <div className="absolute top-[calc(100%+8px)] right-0 w-48 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl shadow-2xl z-50 overflow-hidden animate-in slide-in-from-top-2 fade-in duration-200 ring-1 ring-[#ff4400]/20">
+                                                    <div className="max-h-64 overflow-y-auto hidden-scrollbar py-2">
+                                                        {releases.map((release, index) => {
+                                                            const isSelected = release.version === selectedVersion;
+                                                            return (
+                                                                <button
+                                                                    key={release.version}
+                                                                    onClick={() => {
+                                                                        setSelectedVersion(release.version);
+                                                                        setIsDropdownOpen(false);
+                                                                    }}
+                                                                    className={`w-full text-left px-4 py-3 text-sm transition-colors flex items-center justify-between group ${
+                                                                        isSelected 
+                                                                            ? 'bg-[#ff4400]/10 text-[#ff4400] font-bold' 
+                                                                            : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-white font-medium'
+                                                                    }`}
+                                                                >
+                                                                    <span className="flex items-center gap-2">
+                                                                        v{release.version}
+                                                                        {index === 0 && (
+                                                                            <span className={`text-[9px] uppercase tracking-widest px-1.5 py-0.5 rounded-md ${isSelected ? 'bg-[#ff4400]/20 text-[#ff4400]' : 'bg-white/5 text-white/50 group-hover:bg-white/10 group-hover:text-white/80'}`}>
+                                                                                Latest
+                                                                            </span>
+                                                                        )}
+                                                                    </span>
+                                                                    {isSelected && <CheckCircle2 size={14} className="text-[#ff4400]" />}
+                                                                </button>
+                                                            );
+                                                        })}
+                                                    </div>
                                                 </div>
-                                                <div className="text-[10px] text-[var(--text-secondary)] mb-2 font-medium">
-                                                    {new Date(release.date).toLocaleDateString()}
-                                                </div>
-                                                <p className="text-xs text-[var(--text-secondary)] line-clamp-2 leading-relaxed">
-                                                    {release.changelog}
-                                                </p>
-                                            </div>
-                                        ))}
+                                            </>
+                                        )}
                                     </div>
                                 )}
                             </div>
-                        )}
+                        </div>
                     </div>
                 </div>
 
