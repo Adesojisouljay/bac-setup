@@ -262,33 +262,39 @@ export default function SetupPage() {
                                         </div>
 
                                         {/* Step 2: Verification (Dynamic) */}
-                                        {verificationData?.ownership_verification && (
+                                        {(verificationData?.ownership_verification || verificationData?.ssl?.txt_name) && (
                                             <div className="space-y-2 pt-2 border-t border-white/5">
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-5 h-5 rounded-full bg-[#ff4400] flex items-center justify-center text-[10px] font-bold text-white">2</div>
-                                                    <span className="text-[11px] font-bold text-white">Verify Ownership (TXT Record)</span>
+                                                    <span className="text-[11px] font-bold text-white">Verify Domain & SSL (TXT Records)</span>
                                                 </div>
                                                 <p className="text-[10px] text-[var(--text-secondary)] ml-7 leading-relaxed">
-                                                    Cloudflare requires this TXT record to issue your automated SSL certificate (Green Lock).
+                                                    Cloudflare uses these TXT records to verify you own the domain and to instantly issue your SSL certificate (Green Lock).
                                                 </p>
 
-                                                {/* TXT Record 1: Ownership */}
-                                                <div className="ml-7 space-y-2">
-                                                    <div className="group relative flex items-center justify-between bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl px-4 py-2 transition-all cursor-pointer"
-                                                        onClick={() => {
-                                                            navigator.clipboard.writeText(verificationData.ownership_verification.value);
-                                                            toast.success('TXT Value copied!');
-                                                        }}
-                                                    >
-                                                        <div className="flex flex-col overflow-hidden">
-                                                            <span className="text-[8px] font-bold text-white/30 uppercase tracking-wider">Host: {verificationData.ownership_verification.name.replace(`.${configuredDomain}`, '')}</span>
-                                                            <span className="text-[11px] font-mono font-bold text-white truncate max-w-[200px]">{verificationData.ownership_verification.value}</span>
+                                                {/* TXT Record 1: Ownership (If present) */}
+                                                {verificationData.ownership_verification && (
+                                                    <div className="ml-7 space-y-2 mb-3">
+                                                        <span className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider block">Record A: Domain Ownership</span>
+                                                        <div className="group relative flex items-center justify-between bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl px-4 py-2 transition-all cursor-pointer"
+                                                            onClick={() => {
+                                                                navigator.clipboard.writeText(verificationData.ownership_verification.value);
+                                                                toast.success('TXT Value copied!');
+                                                            }}
+                                                        >
+                                                            <div className="flex flex-col overflow-hidden">
+                                                                <span className="text-[8px] font-bold text-white/30 uppercase tracking-wider">Host: {verificationData.ownership_verification.name.replace(`.${configuredDomain}`, '')}</span>
+                                                                <span className="text-[11px] font-mono font-bold text-white truncate max-w-[200px]">{verificationData.ownership_verification.value}</span>
+                                                            </div>
+                                                            <Copy size={12} className="text-white/20 group-hover:text-[#ff4400] transition-colors" />
                                                         </div>
-                                                        <Copy size={12} className="text-white/20 group-hover:text-[#ff4400] transition-colors" />
                                                     </div>
+                                                )}
 
-                                                    {/* Certificate TXT (If present) */}
-                                                    {verificationData.ssl?.txt_name && (
+                                                {/* Certificate TXT (If present) */}
+                                                {verificationData.ssl?.txt_name && (
+                                                    <div className="ml-7 space-y-2 mb-2">
+                                                        <span className="text-[10px] font-bold text-[#ff4400] uppercase tracking-wider block">Record B: SSL Certificate (Required for HTTPS)</span>
                                                         <div className="group relative flex items-center justify-between bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl px-4 py-2 transition-all cursor-pointer"
                                                             onClick={() => {
                                                                 navigator.clipboard.writeText(verificationData.ssl.txt_value);
@@ -301,8 +307,8 @@ export default function SetupPage() {
                                                             </div>
                                                             <Copy size={12} className="text-white/20 group-hover:text-[#ff4400] transition-colors" />
                                                         </div>
-                                                    )}
-                                                </div>
+                                                    </div>
+                                                )}
                                             </div>
                                         )}
                                     </div>
