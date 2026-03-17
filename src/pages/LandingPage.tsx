@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DownloadCloud, Settings, Zap, ChevronDown, Globe, Shield, Database, Code, Users, CheckCircle2 } from 'lucide-react';
+import { DownloadCloud, Settings, Zap, ChevronDown, Globe, Shield, Database, Code, Users, CheckCircle2, PlayCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 
@@ -147,7 +147,7 @@ export default function LandingPage() {
                         {
                             icon: Globe,
                             title: "1. Point Your Domain",
-                            desc: "Create an A record or CNAME pointing your custom domain (like community.yoursite.com) to our Discovery Gateway IP."
+                            desc: "Purchase a domain and configure its DNS settings. You'll need to create a CNAME record pointing to our Discovery Gateway IP, and TXT records to verify ownership and instantly provision SSL certificates (the green padlock)."
                         },
                         {
                             icon: Settings,
@@ -165,9 +165,29 @@ export default function LandingPage() {
                                 <step.icon className="w-6 h-6" />
                             </div>
                             <h3 className="text-xl font-bold mb-3">{step.title}</h3>
-                            <p className="text-[var(--text-secondary)] leading-relaxed">{step.desc}</p>
+                            <p className="text-[var(--text-secondary)] leading-relaxed text-sm">{step.desc}</p>
                         </div>
                     ))}
+                </div>
+
+                <div className="mt-8 flex justify-center animate-in fade-in slide-in-from-bottom-4">
+                    <a 
+                        href="https://beta.sovraniche.com/post/sovraniche/4afeec14"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="group flex flex-col sm:flex-row items-center gap-4 bg-[var(--bg-card)] border border-[#ff4400]/30 hover:border-[#ff4400] rounded-2xl p-4 pr-6 max-w-2xl w-full transition-all shadow-[0_0_20px_rgba(255,68,0,0.05)] hover:shadow-[0_0_30px_rgba(255,68,0,0.15)] hover:-translate-y-1"
+                    >
+                        <div className="w-12 h-12 bg-[#ff4400]/10 text-[#ff4400] rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#ff4400] group-hover:text-white transition-colors">
+                            <PlayCircle className="w-6 h-6" />
+                        </div>
+                        <div className="text-center sm:text-left flex-1">
+                            <h4 className="font-bold text-[var(--text-primary)] text-sm sm:text-base">Need help setting up your domain?</h4>
+                            <p className="text-[var(--text-secondary)] text-xs sm:text-sm mt-0.5">Watch our step-by-step video tutorial on buying a domain, generating a CNAME, and setting up TXT records.</p>
+                        </div>
+                        <div className="hidden sm:flex text-xs font-black uppercase tracking-widest text-[#ff4400] bg-[#ff4400]/10 px-3 py-1.5 rounded-lg group-hover:bg-[#ff4400] group-hover:text-white transition-colors">
+                            Watch Video
+                        </div>
+                    </a>
                 </div>
 
                 {/* Features Section */}
@@ -329,7 +349,7 @@ export default function LandingPage() {
                         </div>
                         <div className="flex gap-6">
                             <a href="https://github.com/adesojisouljay" target="_blank" rel="noreferrer" className="text-[var(--text-secondary)] hover:text-white transition-colors">Github</a>
-                            <a href="https://sovraniche.com" className="text-[var(--text-secondary)] hover:text-white transition-colors">Main Site</a>
+                            <a href="https://beta.sovraniche.com" target="_blank" rel="noreferrer" className="text-[var(--text-secondary)] hover:text-white transition-colors">Main Site</a>
                         </div>
                     </div>
                 </div>
