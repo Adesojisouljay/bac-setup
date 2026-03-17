@@ -13,7 +13,7 @@ export function Navbar() {
                     <span className="font-bold text-xl tracking-tight text-[var(--text-primary)]">Sovraniche</span>
                 </Link>
                 <nav className="flex gap-6 items-center">
-                    <a href="https://breakaway.community" className="text-sm font-medium text-[var(--text-secondary)] hover:text-white transition-colors">Main Site</a>
+                    <a href="https://beta.sovraniche.com" target="_blank" rel="noreferrer" className="text-sm font-medium text-[var(--text-secondary)] hover:text-white transition-colors">Main Site</a>
                     <Link to="/configure" className="text-sm font-bold bg-[var(--bg-hover)] px-4 py-2 rounded-lg hover:bg-[var(--border-color)] transition-colors text-[var(--text-primary)]">
                         Configure Domain
                     </Link>
